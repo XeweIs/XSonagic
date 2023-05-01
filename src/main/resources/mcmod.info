@@ -1,0 +1,16 @@
+[
+{
+  "modid": "xsonagic",
+  "name": "Xewe's Xonagic",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Xewe"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

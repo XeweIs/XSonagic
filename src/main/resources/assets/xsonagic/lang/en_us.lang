@@ -1,0 +1,10 @@
+#KeyBinds
+key.mode=Change to combination mode
+key.one=First combination button
+key.two=Second combination button
+key.three=Third combination button
+key.four=Fourth combination button
+
+#Message
+message.mode.activated=Combination mode activated
+message.mode.deactivated=Combination mode deactivated
