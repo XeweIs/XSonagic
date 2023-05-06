@@ -1,4 +1,4 @@
-package ru.xewe.xonagic.client.ability;
+package ru.xewe.xonagic.common.ability;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

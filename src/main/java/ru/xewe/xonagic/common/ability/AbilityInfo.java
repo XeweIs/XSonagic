@@ -1,4 +1,4 @@
-package ru.xewe.xonagic.client.ability;
+package ru.xewe.xonagic.common.ability;
 
 import net.minecraft.util.text.TextFormatting;
 import ru.xewe.xonagic.common.enums.TypeCast;
@@ -15,6 +15,7 @@ public @interface AbilityInfo {
     String displayName();
     TextFormatting color() default TextFormatting.WHITE;
     int coolDown();
+    int repeat();
     String combo();
     TypeCast[] activations();
 

@@ -1,7 +1,7 @@
-package ru.xewe.xonagic.client.ability.water;
+package ru.xewe.xonagic.common.ability.water;
 
-import ru.xewe.xonagic.client.ability.Ability;
-import ru.xewe.xonagic.client.ability.CastAbility;
+import ru.xewe.xonagic.common.ability.Ability;
+import ru.xewe.xonagic.common.ability.CastAbility;
 
 public class CastWaterAbility extends CastAbility {
     public static CastWaterAbility instance = new CastWaterAbility();

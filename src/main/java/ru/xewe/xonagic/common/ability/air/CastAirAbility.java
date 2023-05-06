@@ -1,7 +1,7 @@
-package ru.xewe.xonagic.client.ability.air;
+package ru.xewe.xonagic.common.ability.air;
 
-import ru.xewe.xonagic.client.ability.Ability;
-import ru.xewe.xonagic.client.ability.CastAbility;
+import ru.xewe.xonagic.common.ability.Ability;
+import ru.xewe.xonagic.common.ability.CastAbility;
 
 public class CastAirAbility extends CastAbility {
     public static CastAirAbility instance = new CastAirAbility();

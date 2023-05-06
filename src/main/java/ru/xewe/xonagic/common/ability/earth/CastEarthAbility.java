@@ -1,7 +1,7 @@
-package ru.xewe.xonagic.client.ability.earth;
+package ru.xewe.xonagic.common.ability.earth;
 
-import ru.xewe.xonagic.client.ability.Ability;
-import ru.xewe.xonagic.client.ability.CastAbility;
+import ru.xewe.xonagic.common.ability.Ability;
+import ru.xewe.xonagic.common.ability.CastAbility;
 
 public class CastEarthAbility extends CastAbility {
     public static CastEarthAbility instance = new CastEarthAbility();

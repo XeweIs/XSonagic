@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import ru.xewe.xonagic.client.ability.Ability;
+import ru.xewe.xonagic.common.ability.Ability;
 
 public class CPacketCast extends AbstractPacket<CPacketCast>{
     String classPath;
@@ -27,10 +27,10 @@ public class CPacketCast extends AbstractPacket<CPacketCast>{
         }
         try {
             ability = (Ability)myClass.newInstance();
+            ability.execute(player);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        ability.execute(player);
     }
 
     @Override

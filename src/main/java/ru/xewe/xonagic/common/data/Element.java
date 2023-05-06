@@ -1,16 +1,15 @@
 package ru.xewe.xonagic.common.data;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import ru.xewe.xonagic.XeweXonagic;
-import ru.xewe.xonagic.client.ability.air.CastAirAbility;
-import ru.xewe.xonagic.client.ability.earth.CastEarthAbility;
-import ru.xewe.xonagic.client.ability.fire.CastFireAbility;
-import ru.xewe.xonagic.client.ability.water.CastWaterAbility;
+import ru.xewe.xonagic.common.ability.air.CastAirAbility;
+import ru.xewe.xonagic.common.ability.earth.CastEarthAbility;
+import ru.xewe.xonagic.common.ability.fire.CastFireAbility;
+import ru.xewe.xonagic.common.ability.water.CastWaterAbility;
 import ru.xewe.xonagic.common.enums.ElementEnum;
 
 @Mod.EventBusSubscriber(modid = XeweXonagic.MODID)

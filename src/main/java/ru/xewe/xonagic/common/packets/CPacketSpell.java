@@ -1,15 +1,11 @@
 package ru.xewe.xonagic.common.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.MinecraftForge;
-import ru.xewe.xonagic.client.ability.Ability;
+import ru.xewe.xonagic.common.ability.Ability;
 
 import java.io.*;
-import java.util.Arrays;
 
 public class CPacketSpell extends AbstractPacket<CPacketSpell>{
     Ability clazz;

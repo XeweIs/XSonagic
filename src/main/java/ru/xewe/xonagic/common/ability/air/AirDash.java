@@ -1,20 +1,20 @@
-package ru.xewe.xonagic.client.ability.air;
+package ru.xewe.xonagic.common.ability.air;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
-import ru.xewe.xonagic.client.ability.Ability;
-import ru.xewe.xonagic.client.ability.AbilityInfo;
+import ru.xewe.xonagic.common.ability.Ability;
+import ru.xewe.xonagic.common.ability.AbilityInfo;
 import ru.xewe.xonagic.common.enums.TypeCast;
 
 @AbilityInfo(
         name = "AirDash",
         displayName = "Air Dash",
         coolDown = 3,
+        repeat = 0,
         activations = {TypeCast.RightEmpty, TypeCast.RightBlock, TypeCast.RightEntity},
         color = TextFormatting.WHITE,
         combo = "XX"
@@ -46,7 +46,6 @@ public class AirDash extends Ability {
 
     @Override
     public boolean onUpdate(EntityPlayer player) {
-        player.sendMessage(new TextComponentString(player.world.isRemote + ""));
         return false;
     }
 
