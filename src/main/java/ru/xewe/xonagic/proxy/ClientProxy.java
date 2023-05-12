@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import ru.xewe.xonagic.client.gui.RenderGui;
 import ru.xewe.xonagic.client.keyboard.KeyBinds;
 import ru.xewe.xonagic.client.keyboard.KeyPressed;
+import ru.xewe.xonagic.client.RenderPlayerEvents;
 import ru.xewe.xonagic.registry.BlocksRegistry;
 
 public class ClientProxy extends CommonProxy {
@@ -15,6 +16,7 @@ public class ClientProxy extends CommonProxy {
         super.preInit(event);
         KeyBinds.register();
         MinecraftForge.EVENT_BUS.register(new KeyPressed());
+        MinecraftForge.EVENT_BUS.register(new RenderPlayerEvents());
     }
 
     @Override

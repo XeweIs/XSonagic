@@ -11,4 +11,12 @@ public class UtilVector {
         float f3 = MathHelper.sin(-pitch * 0.017453292F);
         return new Vec3d((f1 * f2), f3, (f * f2));
     }
+
+    public static Vec3d rotateLeft(Vec3d vec){
+        return new Vec3d(-vec.z, vec.y, vec.x);
+    }
+
+    public static Vec3d rotateRight(Vec3d vec){
+        return new Vec3d(vec.z, vec.y, -vec.x);
+    }
 }

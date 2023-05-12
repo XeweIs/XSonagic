@@ -5,9 +5,12 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.text.TextFormatting;
 import ru.xewe.xonagic.client.keyboard.KeyBinds;
+import ru.xewe.xonagic.common.ability.AbilityManager;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TextGui extends Gui {
-    public static String coolDownText = "";
     public static String comboText = "";
 
     public TextGui(Minecraft mc) {
@@ -24,11 +27,17 @@ public class TextGui extends Gui {
                 .replace(three, String.format("%s%s"+three, TextFormatting.BLUE, TextFormatting.BOLD))
                 .replace(four, String.format("%s%s"+four, TextFormatting.LIGHT_PURPLE, TextFormatting.BOLD));
 
-        //Выводим текст кулдуна
-        if(!coolDownText.isEmpty()) drawCenteredString(mc.fontRenderer, coolDownText,
+        List<String> list = AbilityManager.coolDownAbilities.stream().map(ability -> new StringBuilder()
+                .append(ability.color)
+                .append(TextFormatting.STRIKETHROUGH)
+                .append(ability.displayName)
+                .append(" ")
+                .append(ability.coolDown / 40 + 1)
+                .append(TextFormatting.RESET).toString()).collect(Collectors.toList());
+
+        drawCenteredString(mc.fontRenderer, String.join(TextFormatting.BOLD+"| |"+TextFormatting.RESET, list),
                 width / 2, height - 80, 0);
 
-        //Выводим комбо
         if(!comboText.isEmpty()) drawCenteredString(mc.fontRenderer, combo,
                 width / 2, height - 100, 0);
 

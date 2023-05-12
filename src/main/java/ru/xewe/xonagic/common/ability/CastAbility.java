@@ -18,19 +18,21 @@ public abstract class CastAbility {
 
     @SubscribeEvent
     public void abilityCast(AbilityCast event) {
+        if (TextGui.comboText.isEmpty()) return;
+
         for(Ability ability : getAbilities()){
             AbilityInfo info = ability.getClass().getAnnotation(AbilityInfo.class);
-            String combo = info.combo()
-                    .replace("Z", Key.getZ()).replace("X", Key.getX())
-                    .replace("C", Key.getC()).replace("V", Key.getV());
+            String combo = info.combo().toLowerCase()
+                    .replace("z", Key.getZ()).replace("x", Key.getX())
+                    .replace("c", Key.getC()).replace("v", Key.getV());
 
             if(TextGui.comboText.equals(combo) && Arrays.asList(info.activations()).contains(event.getTypeCast())){
                 if(ability.allowedExecute()) {
                     ability.execute(Minecraft.getMinecraft().player);
                     NetworkHandler.NETWORK.sendToServer(new CPacketCast(ability.getClass().getName()));
+                    TextGui.comboText = "";
+                    KeyPressed.time = 0;
                 }
-                TextGui.comboText = "";
-                KeyPressed.time = 0;
                 break;
             }
         }

@@ -3,11 +3,11 @@ package ru.xewe.xonagic.common.ability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import ru.xewe.xonagic.client.gui.TextGui;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
@@ -18,6 +18,7 @@ public class AbilityManager {
     public static HashMap<UUID, AbilityManager> aManagers = new HashMap<>();
 
     @SubscribeEvent
+    @SideOnly(value = Side.CLIENT)
     public void onUpdate(TickEvent.ClientTickEvent event) {
         if (Minecraft.getMinecraft().isGamePaused()) return;
         EntityPlayer player = Minecraft.getMinecraft().player;
@@ -25,30 +26,10 @@ public class AbilityManager {
         for (int i = 0; i < coolDownAbilities.size(); i++) {
             Ability ability = coolDownAbilities.get(i);
 
-            ability.coolDown--;
-            StringBuilder pretext = new StringBuilder()
-                    .append(ability.color)
-                    .append(TextFormatting.STRIKETHROUGH)
-                    .append(ability.displayName)
-                    .append(" ")
-                    .append(((ability.coolDown / 40) + 2)).append(TextFormatting.RESET).append("  ");
-            StringBuilder initext = new StringBuilder()
-                    .append(ability.color)
-                    .append(TextFormatting.STRIKETHROUGH)
-                    .append(ability.displayName)
-                    .append(" ")
-                    .append(((ability.coolDown / 40) + 1))
-                    .append(TextFormatting.RESET)
-                    .append("  ");
-
-            if (!TextGui.coolDownText.contains(initext)) {
-                TextGui.coolDownText = TextGui.coolDownText.replace(pretext, initext);
-            }
-
-            if (ability.coolDown == 0) {
-                TextGui.coolDownText = TextGui.coolDownText.replace(initext, "");
-
+            if (ability.coolDown <= 0) {
                 AbilityManager.cancelCoolDown(ability);
+            } else {
+                ability.coolDown--;
             }
 
         }
@@ -67,16 +48,13 @@ public class AbilityManager {
         }
     }
 
-//    static List<EntityPlayerMP> listPlayer = new ArrayList<>();
-
     @SubscribeEvent
     public void onUpdateServer(TickEvent.ServerTickEvent event) {
-//        List<EntityPlayerMP> listPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
         Set<UUID> keys = activateAbilitiesServer.keySet();
         for (UUID key : keys) {
             EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(key);
-            for (int a = 0; a < activateAbilitiesServer.get(player.getUniqueID()).size(); a++) {
-                Ability ability = activateAbilitiesServer.get(player.getUniqueID()).get(a);
+            for (int a = 0; a < activateAbilitiesServer.get(key).size(); a++) {
+                Ability ability = activateAbilitiesServer.get(key).get(a);
 
                 if (ability.onUpdateDefault(player)) {
                     ability.onExit(player);

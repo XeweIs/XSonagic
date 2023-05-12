@@ -5,8 +5,9 @@ import ru.xewe.xonagic.common.ability.CastAbility;
 
 public class CastWaterAbility extends CastAbility {
     public static CastWaterAbility instance = new CastWaterAbility();
+    Ability[] abilities = {};
     @Override
-    protected Ability[] getAbilities() {
-        return new Ability[]{};
+    public Ability[] getAbilities() {
+        return abilities;
     }
 }

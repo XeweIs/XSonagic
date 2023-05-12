@@ -17,31 +17,24 @@ import ru.xewe.xonagic.common.enums.TypeCast;
         repeat = 0,
         activations = {TypeCast.RightEmpty, TypeCast.RightBlock, TypeCast.RightEntity},
         color = TextFormatting.WHITE,
-        combo = "XX"
+        combo = "X"
 )
 public class AirDash extends Ability {
 
-    public final static AirDash instance = new AirDash();
-
-    @Override
-    public Ability getInstance() {
-        return AirDash.instance;
-    }
-
     public void execute(EntityPlayer player) {
-        super.execute(player);
-
         player.motionX = player.getLookVec().x;
         player.motionY = 0.2;
         player.motionZ = player.getLookVec().z;
 
         if (!player.world.isRemote) {
-            for (byte i = 0; i <= 10; i++)
+            for (byte i = 0; i <= 10; i++) {
                 ((WorldServer) player.world).spawnParticle(EnumParticleTypes.SPELL, (player.posX + (Math.sin(i * (Math.PI / 5))) * 0.5), player.posY + 0.3f, (player.posZ + (Math.cos(i * (Math.PI / 5))) * 0.5), 5, 0, 0, 0, 0f);
+            }
             player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_CREEPER_DEATH, SoundCategory.PLAYERS, 1, 3f);
             player.fallDistance = 0;
         }
 
+        super.execute(player);
     }
 
     @Override

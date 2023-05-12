@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import ru.xewe.xonagic.XeweXonagic;
-import ru.xewe.xonagic.common.RenderPlayerEvents;
 import ru.xewe.xonagic.common.ability.AbilityManager;
 import ru.xewe.xonagic.common.entity.CustomBullet;
 import ru.xewe.xonagic.common.packets.NetworkHandler;
@@ -20,7 +19,6 @@ public class CommonProxy {
 
 
         MinecraftForge.EVENT_BUS.register(new AbilityManager());
-        MinecraftForge.EVENT_BUS.register(new RenderPlayerEvents());
     }
 
     public void init(FMLInitializationEvent event) {

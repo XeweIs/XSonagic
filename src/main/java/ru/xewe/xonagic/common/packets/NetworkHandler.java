@@ -13,10 +13,8 @@ public final class NetworkHandler {
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(XeweXonagic.MODID + "-Packet");
 
     public static void init() {
-        register(CPacketParticle.class);
-        register(CPacketSound.class);
-        register(CPacketSpell.class);
         register(CPacketCast.class);
+        register(SPacketPlayerMotion.class);
     }
 
     public static void sendToAllAround(IMessage packet, World world, double x, double y, double z, double distance) {

@@ -1,7 +1,10 @@
 package ru.xewe.xonagic.common.collision;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class Collision {
     public static boolean onCollide(World world, AxisAlignedBB collider, AxisAlignedBB... collidingBoxes) {
@@ -19,5 +22,9 @@ public class Collision {
 
     public static boolean onCollideBlock(AxisAlignedBB collider, World world){
         return world.checkBlockCollision(collider);
+    }
+
+    public static List<Entity> onCollideEntity(AxisAlignedBB collider, World world, Entity exception){
+        return world.getEntitiesWithinAABB(Entity.class, collider, a -> a != exception);
     }
 }

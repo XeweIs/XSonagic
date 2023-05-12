@@ -11,10 +11,10 @@ import ru.xewe.xonagic.XeweXonagic;
 public class KeyBinds {
     private static final String CATEGORY = XeweXonagic.NAME;
     public static final KeyBinding Mode_change_button = new KeyBinding(I18n.format("key.mode"), Keyboard.KEY_R, CATEGORY);
-    public static final KeyBinding OneButton = new KeyBinding(I18n.format("key.one"), Keyboard.KEY_Z, CATEGORY);
-    public static final KeyBinding TwoButton = new KeyBinding(I18n.format("key.two"), Keyboard.KEY_X, CATEGORY);
-    public static final KeyBinding ThreeButton = new KeyBinding(I18n.format("key.three"), Keyboard.KEY_C, CATEGORY);
-    public static final KeyBinding FourButton = new KeyBinding(I18n.format("key.four"), Keyboard.KEY_V, CATEGORY);
+    public static final KeyBinding OneButton = new KeyBinding("1. "+I18n.format("key.one"), Keyboard.KEY_Z, CATEGORY);
+    public static final KeyBinding TwoButton = new KeyBinding("2. "+I18n.format("key.two"), Keyboard.KEY_X, CATEGORY);
+    public static final KeyBinding ThreeButton = new KeyBinding("3. "+I18n.format("key.three"), Keyboard.KEY_C, CATEGORY);
+    public static final KeyBinding FourButton = new KeyBinding("4. "+I18n.format("key.four"), Keyboard.KEY_V, CATEGORY);
 
     public static void register() {
         setRegister(Mode_change_button);

@@ -13,7 +13,6 @@ import ru.xewe.xonagic.client.gui.TextGui;
 
 public class KeyPressed {
     public static boolean ALT;
-    public static boolean SHIFT;
     boolean isActive = false;
 
     @SubscribeEvent
@@ -47,7 +46,6 @@ public class KeyPressed {
     @SubscribeEvent
     public void PressModify(InputEvent.KeyInputEvent event) {
         if(!isActive) return;
-        SHIFT = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
         ALT = Keyboard.isKeyDown(Keyboard.KEY_LMENU);
 
