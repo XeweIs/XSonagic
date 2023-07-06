@@ -1,10 +1,40 @@
-#KeyBinds
+
+# Привязка клавиш
 key.mode=Переключение на режим комбинации
 key.one=Первая клавиша комбинирования
 key.two=Вторая клавиша комбинирования
 key.three=Третья клавиша комбинирования
 key.four=Четвёртая клавиша комбинирования
 
-#Message
+# Сообщение
 message.mode.activated=Режим комбинирования активирован.
 message.mode.deactivated=Режим комбинирования деактивирован.
+
+# Команды
+command.elementChoose.usage=/elementChoose <элемент> [игрок]
+command.elementChoose.change=Ваш элемент изменён на %1$s%2$s.
+command.elementChoose.success=Элемент игрока %1$s изменён на %2$s.
+command.elementChoose.unknownElement=Неопознанный элемент под названием "%s". Пожалуйста, воспользуйтесь <tab> для автоподставки.
+
+command.editAbilities.usage=/editAbilities <игрок> <опция> <*способность>
+command.editAbilities.change.add=%s добавлена в список Ваших способностей.
+command.editAbilities.success.add=Игроку %1$s's была добавлена способность %2$s.
+command.editAbilities.fail.add=Не удалось добавить способность %2$s игроку %1$s по причине того, что данная способность у него уже имеется.
+command.editAbilities.change.remove=%s удалена из списка Ваших способностей.
+command.editAbilities.success.remove=Игроку %1$s's была исключена способность %2$s.
+command.editAbilities.fail.remove=Не удалось удалить способность %2$s у игрока %1$s по причине того, что данная способность у него отсутствует.
+command.editAbilities.change.reset=Ваши способности были сброшены.
+command.editAbilities.success.reset=Способности игрока %s были сброшены.
+command.editAbilities.unknownAbility=Неопознанная способность под названием "%s". Пожалуйста, воспользуйтесь <tab> для автоподставки.
+
+command.getInfo.usage=/getInfo <опция> [игрок]
+command.getInfo.element.self=Ваш элемент на данный момент %s.
+command.getInfo.element.other=Элемент игрока %1$s на данный момент %2$s.
+command.getInfo.abilities.self=Список ваших способностей: %s
+command.getInfo.abilities.other=Список способностей игрока %1$s: %2$s
+
+# Элементы
+element.air=Воздух
+element.earth=Земля
+element.fire=Огонь
+element.water=Вода

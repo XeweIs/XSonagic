@@ -14,32 +14,31 @@ public abstract class Ability {
         AbilityInfo info = getClass().getAnnotation(AbilityInfo.class);
         this.player = player;
         this.repeat = info.repeat();
-        AbilityManager.activateAbility(this);
+        AbilityManager.getAbilityManager(player).activateAbility(this);
         if (player.world.isRemote) {
             this.displayName = info.displayName();
             this.color = info.color();
         }
     }
 
-    protected void onExit(EntityPlayer player) {
-        this.player = player;
-        AbilityManager.deactivateAbility(this);
+    protected void onExit() {
+        AbilityManager.getAbilityManager(player).deactivateAbility(this);
         this.repeat = 0;
-        if (player.world.isRemote) {
-            if (!player.isCreative()) {
-                AbilityManager.imposeCoolDown(this);
-            }
+        if (!player.isCreative()) {
+            this.coolDown = 0;
+            AbilityManager.getAbilityManager(player).imposeCoolDown(this);
         }
+
     }
 
-    protected abstract boolean onUpdate(EntityPlayer player);
+    public abstract boolean onUpdate();
 
-    public boolean onUpdateDefault(EntityPlayer player) {
-        if(repeat > 0) {
-            boolean result = onUpdate(player);
+    public boolean onUpdateDefault() {
+        if (repeat > 0) {
+            boolean result = onUpdate();
             repeat--;
             return result;
-        }else {
+        } else {
             return true;
         }
     }
@@ -54,9 +53,5 @@ public abstract class Ability {
 
     protected boolean isCoolDown() {
         return coolDown > 0;
-    }
-
-    protected void setCoolDown(int coolDown) {
-        this.coolDown = (coolDown * 40);
     }
 }

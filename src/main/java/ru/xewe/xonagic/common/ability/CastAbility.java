@@ -1,13 +1,12 @@
 package ru.xewe.xonagic.common.ability;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import ru.xewe.xonagic.client.customevents.AbilityCast;
 import ru.xewe.xonagic.client.gui.TextGui;
 import ru.xewe.xonagic.client.keyboard.Key;
-import ru.xewe.xonagic.client.keyboard.KeyPressed;
-import ru.xewe.xonagic.common.packets.CPacketCast;
-import ru.xewe.xonagic.common.packets.NetworkHandler;
+import ru.xewe.xonagic.common.data.AbilitiesData;
 
 import java.util.Arrays;
 
@@ -28,13 +27,16 @@ public abstract class CastAbility {
 
             if(TextGui.comboText.equals(combo) && Arrays.asList(info.activations()).contains(event.getTypeCast())){
                 if(ability.allowedExecute()) {
-                    ability.execute(Minecraft.getMinecraft().player);
-                    NetworkHandler.NETWORK.sendToServer(new CPacketCast(ability.getClass().getName()));
-                    TextGui.comboText = "";
-                    KeyPressed.time = 0;
+//                    ability.execute(Minecraft.getMinecraft().player);
+//                    NetworkHandler.NETWORK.sendToServer(new CPacketCast(ability.getClass().getName()));
+//                    TextGui.comboText = "";
+//                    KeyPressed.time = 0;
+                    Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+ AbilitiesData.get(Minecraft.getMinecraft().player)));
                 }
                 break;
             }
         }
+
+        //Перекинуть это в пакет
     }
 }

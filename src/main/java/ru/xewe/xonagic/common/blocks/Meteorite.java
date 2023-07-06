@@ -10,7 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import ru.xewe.xonagic.common.data.Element;
+import ru.xewe.xonagic.common.data.ElementData;
 import ru.xewe.xonagic.common.enums.ElementEnum;
 
 public class Meteorite extends Block {
@@ -23,7 +23,7 @@ public class Meteorite extends Block {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos position, IBlockState blockState, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ){
-        Element.setElement(player, ElementEnum.Air);
+        ElementData.setElement(player, ElementEnum.Air);
         return true;
     }
 

@@ -5,7 +5,7 @@ import ru.xewe.xonagic.common.ability.CastAbility;
 
 public class CastFireAbility extends CastAbility {
     public static CastFireAbility instance = new CastFireAbility();
-    Ability[] abilities = {};
+    Ability[] abilities = {new FireRocket()};
     @Override
     public Ability[] getAbilities() {
         return abilities;

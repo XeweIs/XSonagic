@@ -17,6 +17,13 @@ public class SPacketPlayerMotion extends AbstractPacket<SPacketPlayerMotion>{
         this.y = (float)vec.y;
         this.z = (float)vec.z;
     }
+
+    public SPacketPlayerMotion(float x, float y, float z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     @Override
     public void handleClient(SPacketPlayerMotion message, EntityPlayerSP player) {
         player.motionX = message.x;

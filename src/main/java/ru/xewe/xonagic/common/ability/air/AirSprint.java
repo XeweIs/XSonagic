@@ -10,6 +10,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import ru.xewe.xonagic.common.ability.Ability;
 import ru.xewe.xonagic.common.ability.AbilityInfo;
+import ru.xewe.xonagic.common.enums.ElementEnum;
 import ru.xewe.xonagic.common.enums.TypeCast;
 import ru.xewe.xonagic.utils.UtilVector;
 
@@ -18,6 +19,7 @@ import java.util.Random;
 @AbilityInfo(
         name = "AirSprint",
         displayName = "Air Sprint",
+        element = ElementEnum.Air,
         coolDown = 10,
         repeat = 25,
         activations = {TypeCast.RightEmpty, TypeCast.RightBlock, TypeCast.RightEntity},
@@ -32,7 +34,7 @@ public class AirSprint extends Ability {
     }
 
     @Override
-    protected boolean onUpdate(EntityPlayer player) {
+    public boolean onUpdate() {
         if (player.onGround) {
             player.motionX = UtilVector.getVectorForRotation(0, player.rotationYaw).x;
             player.motionZ = UtilVector.getVectorForRotation(0, player.rotationYaw).z;
@@ -46,12 +48,11 @@ public class AirSprint extends Ability {
                     float x = (float) (vec.x + (Math.sin(i * (Math.PI / 5))) * 0.5);
                     float y = (float) player.posY;
                     float z = (float) (vec.z + (Math.cos(i * (Math.PI / 5))) * 0.5);
-                    ((WorldServer) player.world).spawnParticle(EnumParticleTypes.SNOWBALL, x, y, z, 3, 0, 0, 0, 0f);
+                    ((WorldServer) player.world).spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, x, y, z, 1, 0, 0, 0, 0f);
                     ((WorldServer) player.world).spawnParticle(EnumParticleTypes.SPELL, x, y, z, 3, 0, 0, 0, 0f);
                 }
             }
         }else{
-            //Чтобы не делало игрока видимым, когда на нём эффект невидимости
             if(!player.isPotionActive(Potion.getPotionFromResourceLocation("invisibility"))) {
                 player.setInvisible(false);
             }
@@ -60,8 +61,8 @@ public class AirSprint extends Ability {
     }
 
     @Override
-    protected void onExit(EntityPlayer player) {
-        super.onExit(player);
+    protected void onExit() {
+        super.onExit();
         if(!player.isPotionActive(Potion.getPotionFromResourceLocation("invisibility"))) {
             player.setInvisible(false);
         }

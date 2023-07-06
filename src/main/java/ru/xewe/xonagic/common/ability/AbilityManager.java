@@ -2,32 +2,33 @@ package ru.xewe.xonagic.common.ability;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import ru.xewe.xonagic.XeweXonagic;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class AbilityManager {
-    public static List<Ability> coolDownAbilities = new ArrayList<>();
-    public static List<Ability> activateAbilities = new ArrayList<>();
-    public static HashMap<UUID, List<Ability>> activateAbilitiesServer = new HashMap<>();
-    public static HashMap<UUID, AbilityManager> aManagers = new HashMap<>();
+    public List<Ability> coolDownAbilities = new ArrayList<>();
+    public List<Ability> activateAbilities = new ArrayList<>();
+//    public List<Ability> abilities = new ArrayList<>();
+    public static AbilityManager abilityManagerSP = new AbilityManager();
+    public static HashMap<UUID, AbilityManager> abilityManagerMP = new HashMap<>();
 
-    @SubscribeEvent
-    @SideOnly(value = Side.CLIENT)
-    public void onUpdate(TickEvent.ClientTickEvent event) {
+    @SideOnly(Side.CLIENT)
+    public void onUpdate() {
         if (Minecraft.getMinecraft().isGamePaused()) return;
         EntityPlayer player = Minecraft.getMinecraft().player;
         //CoolDown for Client
+
         for (int i = 0; i < coolDownAbilities.size(); i++) {
             Ability ability = coolDownAbilities.get(i);
 
             if (ability.coolDown <= 0) {
-                AbilityManager.cancelCoolDown(ability);
+                cancelCoolDown(ability);
             } else {
                 ability.coolDown--;
             }
@@ -39,61 +40,112 @@ public class AbilityManager {
             Ability ability = activateAbilities.get(i);
 
             if (player.isDead) {
-                ability.onExit(player);
+                ability.onExit();
+                break;
             }
 
-            if (ability.onUpdateDefault(player)) {
-                ability.onExit(player);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onUpdateServer(TickEvent.ServerTickEvent event) {
-        Set<UUID> keys = activateAbilitiesServer.keySet();
-        for (UUID key : keys) {
-            EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(key);
-            for (int a = 0; a < activateAbilitiesServer.get(key).size(); a++) {
-                Ability ability = activateAbilitiesServer.get(key).get(a);
-
-                if (ability.onUpdateDefault(player)) {
-                    ability.onExit(player);
-                }
+            if (ability.onUpdateDefault()) {
+                ability.onExit();
             }
         }
     }
 
-    public static void activateAbility(Ability ability) {
-        EntityPlayer player = ability.player;
-        if (player.world.isRemote) {
-            AbilityManager.activateAbilities.add(ability);
-        } else {
-            if (AbilityManager.activateAbilitiesServer.get(player.getUniqueID()) == null) {
-                List<Ability> abilities = new ArrayList<>();
-                abilities.add(ability);
-                AbilityManager.activateAbilitiesServer.put(player.getUniqueID(), abilities);
+    public void onUpdateServer() {
+        //Update for Server
+        for (int a = 0; a < activateAbilities.size(); a++) {
+            Ability ability = activateAbilities.get(a);
+
+            if (ability.player.isDead) {
+                ability.onExit();
+                break;
+            }
+
+            if (ability.onUpdateDefault()) {
+                ability.onExit();
+            }
+        }
+
+        //CoolDown for Server
+        for (int a = 0; a < coolDownAbilities.size(); a++){
+            Ability ability = coolDownAbilities.get(a);
+
+            if (ability.coolDown <= 0) {
+                cancelCoolDown(ability);
             } else {
-                AbilityManager.activateAbilitiesServer.get(player.getUniqueID()).add(ability);
+                ability.coolDown--;
             }
         }
     }
 
-    public static void deactivateAbility(Ability ability) {
-        EntityPlayer player = ability.player;
-        if (player.world.isRemote)
-            AbilityManager.activateAbilities.remove(ability);
-        else {
-            AbilityManager.activateAbilitiesServer.get(player.getUniqueID()).remove(ability);
-        }
+    public void activateAbility(Ability ability) {
+        activateAbilities.add(ability);
     }
 
-    public static void imposeCoolDown(Ability ability) {
+    public void deactivateAbility(Ability ability) {
+        activateAbilities.remove(ability);
+    }
+
+    public void imposeCoolDown(Ability ability) {
         AbilityInfo info = ability.getClass().getAnnotation(AbilityInfo.class);
-        ability.setCoolDown(info.coolDown());
-        AbilityManager.coolDownAbilities.add(ability);
+        ability.coolDown = (ability.coolDown != 0 ? ability.coolDown : info.coolDown()) * 20;
+        coolDownAbilities.add(ability);
     }
 
-    public static void cancelCoolDown(Ability ability) {
-        AbilityManager.coolDownAbilities.remove(ability);
+    public void cancelCoolDown(Ability ability) {
+        coolDownAbilities.remove(ability);
+    }
+
+    //Special
+    public static AbilityManager getAbilityManager(EntityPlayer player){
+        if(player.world.isRemote) {
+            return getAbilityManagerSP();
+        }else{
+            return getAbilityManagerMP(player.getUniqueID());
+        }
+
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static AbilityManager getAbilityManagerSP(){
+        return abilityManagerSP;
+    }
+
+    public static AbilityManager getAbilityManagerMP(UUID uuidPlayer){
+        return abilityManagerMP.get(uuidPlayer);
+    }
+
+    public static Ability getAbility(String name) {
+        String element;
+        Ability ability;
+        Class<? extends Ability> clazz;
+
+        if(name.contains("Air")){
+            element = "air";
+        }else if (name.contains("Fire")){
+            element = "fire";
+        }else if (name.contains("Earth")){
+            element = "earth";
+        }else if (name.contains("Water")){
+            element = "water";
+        }else{
+            XeweXonagic.logger.error("Ability element not found : "+name);
+            return null;
+        }
+
+        String path = "ru.xewe.xonagic.common.ability."+element+"."+name;
+        try {
+            clazz = (Class<? extends Ability>) Class.forName(path);
+        } catch (ClassNotFoundException ex) {
+            XeweXonagic.logger.error("Ability class not found : "+path);
+            throw new RuntimeException(ex);
+        }
+
+        try {
+            ability = clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+        return ability;
     }
 }

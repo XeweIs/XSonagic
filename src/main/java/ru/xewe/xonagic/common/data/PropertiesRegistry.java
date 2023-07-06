@@ -8,12 +8,12 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import ru.xewe.xonagic.XeweXonagic;
-import ru.xewe.xonagic.common.enums.ElementEnum;
 
 @Mod.EventBusSubscriber(modid = XeweXonagic.MODID)
 public class PropertiesRegistry {
 
     public static final DataParameter<String> ELEMENT = EntityDataManager.createKey(EntityPlayer.class, DataSerializers.STRING);
+    public static final DataParameter<String> ABILITIES = EntityDataManager.createKey(EntityPlayer.class, DataSerializers.STRING);
 
     @SubscribeEvent
     public static void onPlayerConstructing(EntityEvent.EntityConstructing event) {
@@ -22,7 +22,8 @@ public class PropertiesRegistry {
 
             EntityPlayer player = (EntityPlayer) event.getEntity();
 
-            player.getDataManager().register(ELEMENT, ElementEnum.None.toString());
+            player.getDataManager().register(ELEMENT, "none");
+            player.getDataManager().register(ABILITIES, "");
         }
     }
 }

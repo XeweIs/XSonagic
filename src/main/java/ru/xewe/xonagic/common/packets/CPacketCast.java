@@ -5,13 +5,19 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import ru.xewe.xonagic.common.ability.Ability;
+import ru.xewe.xonagic.common.ability.AbilityInfo;
+import ru.xewe.xonagic.common.ability.AbilityManager;
 
-public class CPacketCast extends AbstractPacket<CPacketCast>{
+public class CPacketCast extends AbstractPacket<CPacketCast> {
     String classPath;
-    public CPacketCast(){}
-    public CPacketCast(String classPath){
+
+    public CPacketCast() {
+    }
+
+    public CPacketCast(String classPath) {
         this.classPath = classPath;
     }
+
     @Override
     public void handleClient(CPacketCast message, EntityPlayerSP player) {
     }
@@ -19,15 +25,19 @@ public class CPacketCast extends AbstractPacket<CPacketCast>{
     @Override
     public void handleServer(CPacketCast msg, EntityPlayerMP player) {
         Class<?> myClass;
-        Ability ability;
+        Ability newAbility;
         try {
             myClass = Class.forName(msg.classPath);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         try {
-            ability = (Ability)myClass.newInstance();
-            ability.execute(player);
+            newAbility = (Ability) myClass.newInstance();
+            if(!AbilityManager.getAbilityManagerMP(player.getUniqueID()).coolDownAbilities
+                    .toString().contains(newAbility.getClass().getAnnotation(AbilityInfo.class).name())){
+
+                newAbility.execute(player);
+            }
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

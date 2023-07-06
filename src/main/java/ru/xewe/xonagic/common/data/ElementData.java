@@ -13,8 +13,8 @@ import ru.xewe.xonagic.common.ability.water.CastWaterAbility;
 import ru.xewe.xonagic.common.enums.ElementEnum;
 
 @Mod.EventBusSubscriber(modid = XeweXonagic.MODID)
-public class Element {
-
+public class ElementData {
+    static String defaultValue = "none";
     public static ElementEnum getElement(EntityPlayer player) {
         return ElementEnum.valueOf(player.getDataManager().get(PropertiesRegistry.ELEMENT));
     }
@@ -47,23 +47,19 @@ public class Element {
     }
 
     public static void refillElement(EntityPlayer player) {
-
-        player.getDataManager().set(PropertiesRegistry.ELEMENT, ElementEnum.None.toString());
+        player.getDataManager().set(PropertiesRegistry.ELEMENT, defaultValue);
     }
 
     private static void saveElementToNBT(EntityPlayer player) {
-
         player.getEntityData().setString(XeweXonagic.MODID + ":element", getElement(player).toString());
     }
 
     private static String loadElementFromNBT(EntityPlayer player) {
-
-        return player.getEntityData().hasKey(XeweXonagic.MODID + ":element") ? player.getEntityData().getString(XeweXonagic.MODID + ":element") : ElementEnum.None.toString();
+        return player.getEntityData().hasKey(XeweXonagic.MODID + ":element") ? player.getEntityData().getString(XeweXonagic.MODID + ":element") : defaultValue;
     }
 
     @SubscribeEvent
     public static void onPlayerLogIn(PlayerEvent.PlayerLoggedInEvent event) {
-
         setElement(event.player, ElementEnum.valueOf(loadElementFromNBT(event.player)));
     }
 
@@ -77,6 +73,6 @@ public class Element {
         EntityPlayer player = event.getEntityPlayer();
         EntityPlayer oldPlayer = event.getOriginal();
 
-        Element.setElement(player, Element.getElement(oldPlayer));
+        ElementData.setElement(player, ElementData.getElement(oldPlayer));
     }
 }

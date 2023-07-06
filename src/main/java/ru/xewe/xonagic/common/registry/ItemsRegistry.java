@@ -1,4 +1,4 @@
-package ru.xewe.xonagic.registry;
+package ru.xewe.xonagic.common.registry;
 
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

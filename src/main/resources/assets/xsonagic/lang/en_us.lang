@@ -1,10 +1,41 @@
-#KeyBinds
+# %1$s %2$s %3$s
+
+# KeyBinds
 key.mode=Change to combination mode
 key.one=First combination button
 key.two=Second combination button
 key.three=Third combination button
 key.four=Fourth combination button
 
-#Message
-message.mode.activated=Combination mode activated
-message.mode.deactivated=Combination mode deactivated
+# Message
+message.mode.activated=Combination mode activated.
+message.mode.deactivated=Combination mode deactivated.
+
+# Commands
+command.elementChoose.usage=/elementChoose <element> [player]
+command.elementChoose.change=Your element has been changed to %s
+command.elementChoose.success=Set %1$s's element to %2$s
+command.elementChoose.unknownElement=Unknown element name "%s". Please use <tab> for autofitting.
+
+command.editAbilities.usage=/editAbilities <player> <option> <*ability>
+command.editAbilities.change.add=%s has been added to your abilities.
+command.editAbilities.success.add=%1$s's was added an ability %2$s
+command.editAbilities.fail.add=Failed to add the %2$s ability to player %1$s's because the player already has this ability.
+command.editAbilities.change.remove=%s has been removed from your abilities.
+command.editAbilities.success.remove=%1$s's has had his ability removed %2$s.
+command.editAbilities.fail.remove=Failed to remove the %2$s ability of %1$s's because the player does not have this ability.
+command.editAbilities.change.reset=Your abilities have been reset.
+command.editAbilities.success.reset=%s's list of abilities has been reset.
+command.editAbilities.unknownAbility=Unknown ability name "%s". Please use <tab> for autofitting.
+
+command.getInfo.usage=/getInfo <option> [player]
+command.getInfo.element.self=Your element is currently %s
+command.getInfo.element.other=The player element %1$s's is currently %2$s
+command.getInfo.abilities.self=List of your abilities: %s
+command.getInfo.abilities.other=A list of the %1$s's abilities: %2$s
+
+# Elements
+element.air=Air
+element.earth=Earth
+element.fire=Fire
+element.water=Water

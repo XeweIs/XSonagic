@@ -8,11 +8,13 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import ru.xewe.xonagic.common.ability.Ability;
 import ru.xewe.xonagic.common.ability.AbilityInfo;
+import ru.xewe.xonagic.common.enums.ElementEnum;
 import ru.xewe.xonagic.common.enums.TypeCast;
 
 @AbilityInfo(
         name = "AirJump",
         displayName = "Air Jump",
+        element = ElementEnum.Air,
         coolDown = 4,
         repeat = 5,
         activations = {TypeCast.Jump},
@@ -26,7 +28,7 @@ public class AirJump extends Ability {
     }
 
     @Override
-    protected boolean onUpdate(EntityPlayer player) {
+    public boolean onUpdate() {
 
         if (!player.world.isRemote) {
             ((WorldServer) player.world).spawnParticle(EnumParticleTypes.CLOUD,
@@ -41,7 +43,7 @@ public class AirJump extends Ability {
     }
 
     @Override
-    protected void onExit(EntityPlayer player) {
+    protected void onExit() {
         if(!player.world.isRemote){
             player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_CREEPER_DEATH, SoundCategory.PLAYERS, 1, 3f);
         }
@@ -52,6 +54,6 @@ public class AirJump extends Ability {
             player.motionY = 1.2;
         }
 
-        super.onExit(player);
+        super.onExit();
     }
 }

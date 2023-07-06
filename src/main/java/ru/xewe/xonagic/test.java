@@ -1,17 +1,19 @@
 package ru.xewe.xonagic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class test {
 
     public static void main(String[] args) {
-        List<String> list = new ArrayList<>();
-        list.add("Lol 1");
+        //startPos + (endPos - startPos) * alpha;
+//        for (int i = 0; i <= 10; i++) {
+//            float alpha = i / 10f;
 
-        list = list.stream().map(c -> c.contains("Lol") ? "NeLol 2" : c).collect(Collectors.toList());
+//            Vec3d startPos = new Vec3d(1, 1, 1);
+//            Vec3d endPos = new Vec3d(0, 4, 8);
+//
+//            Vec3d newPos = startPos.add((endPos.subtract(startPos)).scale(alpha));
 
-        System.out.println(list);
+
+//        }
+
     }
 }

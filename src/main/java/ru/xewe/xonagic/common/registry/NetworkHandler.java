@@ -1,4 +1,4 @@
-package ru.xewe.xonagic.common.packets;
+package ru.xewe.xonagic.common.registry;
 
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -6,6 +6,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import ru.xewe.xonagic.XeweXonagic;
+import ru.xewe.xonagic.common.packets.CPacketCast;
+import ru.xewe.xonagic.common.packets.SPacketPlayerMotion;
 
 public final class NetworkHandler {
     private static short id = 0;

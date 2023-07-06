@@ -4,11 +4,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import ru.xewe.xonagic.client.RenderPlayerEvents;
 import ru.xewe.xonagic.client.gui.RenderGui;
 import ru.xewe.xonagic.client.keyboard.KeyBinds;
 import ru.xewe.xonagic.client.keyboard.KeyPressed;
-import ru.xewe.xonagic.client.RenderPlayerEvents;
-import ru.xewe.xonagic.registry.BlocksRegistry;
+import ru.xewe.xonagic.common.registry.BlocksRegistry;
 
 public class ClientProxy extends CommonProxy {
     @Override

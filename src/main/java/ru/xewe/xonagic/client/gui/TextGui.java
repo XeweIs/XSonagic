@@ -27,12 +27,12 @@ public class TextGui extends Gui {
                 .replace(three, String.format("%s%s"+three, TextFormatting.BLUE, TextFormatting.BOLD))
                 .replace(four, String.format("%s%s"+four, TextFormatting.LIGHT_PURPLE, TextFormatting.BOLD));
 
-        List<String> list = AbilityManager.coolDownAbilities.stream().map(ability -> new StringBuilder()
+        List<String> list = AbilityManager.getAbilityManagerSP().coolDownAbilities.stream().map(ability -> new StringBuilder()
                 .append(ability.color)
                 .append(TextFormatting.STRIKETHROUGH)
                 .append(ability.displayName)
                 .append(" ")
-                .append(ability.coolDown / 40 + 1)
+                .append(ability.coolDown / 20 + 1)
                 .append(TextFormatting.RESET).toString()).collect(Collectors.toList());
 
         drawCenteredString(mc.fontRenderer, String.join(TextFormatting.BOLD+"| |"+TextFormatting.RESET, list),
