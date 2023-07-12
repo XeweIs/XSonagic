@@ -27,6 +27,7 @@ command.editAbilities.fail.remove=Failed to remove the %2$s ability of %1$s's be
 command.editAbilities.change.reset=Your abilities have been reset.
 command.editAbilities.success.reset=%s's list of abilities has been reset.
 command.editAbilities.unknownAbility=Unknown ability name "%s". Please use <tab> for autofitting.
+command.editAbilities.mismatchAbility=The %2$s ability does not match the %1$s's element.
 
 command.getInfo.usage=/getInfo <option> [player]
 command.getInfo.element.self=Your element is currently %s

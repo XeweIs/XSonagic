@@ -1,42 +1,42 @@
 package ru.xewe.xonagic.common.ability;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.xewe.xonagic.client.customevents.AbilityCast;
 import ru.xewe.xonagic.client.gui.TextGui;
 import ru.xewe.xonagic.client.keyboard.Key;
-import ru.xewe.xonagic.common.data.AbilitiesData;
+import ru.xewe.xonagic.common.packets.CPacketCastAbility;
+import ru.xewe.xonagic.common.registry.NetworkHandler;
 
 import java.util.Arrays;
+import java.util.List;
 
 
-public abstract class CastAbility {
+public class CastAbility {
 
-    protected abstract Ability[] getAbilities();
+    @SideOnly(Side.CLIENT)
+    public List<Ability> getAbilities(){
+        return AbilityManager.abilityManagerSP.abilities;
+    }
 
     @SubscribeEvent
-    public void abilityCast(AbilityCast event) {
+    public void abilityCastPre(AbilityCast event) {
         if (TextGui.comboText.isEmpty()) return;
 
         for(Ability ability : getAbilities()){
-            AbilityInfo info = ability.getClass().getAnnotation(AbilityInfo.class);
-            String combo = info.combo().toLowerCase()
+            String combo = ability.getInfo().combo().toLowerCase()
                     .replace("z", Key.getZ()).replace("x", Key.getX())
                     .replace("c", Key.getC()).replace("v", Key.getV());
 
-            if(TextGui.comboText.equals(combo) && Arrays.asList(info.activations()).contains(event.getTypeCast())){
+            if(TextGui.comboText.equals(combo) && Arrays.asList(ability.getInfo().activations()).contains(event.getTypeCast())){
+                //Вы подумаете, что это условие бессмысленное, ибо такое же есть в пакете, но нет.
+                //Это условие здесь как второй этап избежания спама пакетом.
                 if(ability.allowedExecute()) {
-//                    ability.execute(Minecraft.getMinecraft().player);
-//                    NetworkHandler.NETWORK.sendToServer(new CPacketCast(ability.getClass().getName()));
-//                    TextGui.comboText = "";
-//                    KeyPressed.time = 0;
-                    Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+ AbilitiesData.get(Minecraft.getMinecraft().player)));
+                    NetworkHandler.NETWORK.sendToServer(new CPacketCastAbility(ability.getInfo().name()));
                 }
                 break;
             }
         }
-
-        //Перекинуть это в пакет
     }
 }

@@ -11,8 +11,8 @@ import ru.xewe.xonagic.common.ability.Ability;
 import ru.xewe.xonagic.common.ability.AbilityInfo;
 import ru.xewe.xonagic.common.enums.ElementEnum;
 import ru.xewe.xonagic.common.enums.TypeCast;
-import ru.xewe.xonagic.common.registry.NetworkHandler;
 import ru.xewe.xonagic.common.packets.SPacketPlayerMotion;
+import ru.xewe.xonagic.common.registry.NetworkHandler;
 
 @AbilityInfo(
         name = "AirDash",
@@ -35,10 +35,10 @@ public class AirDash extends Ability {
                         (player.posZ + (Math.cos(i * (Math.PI / 5))) * 0.5), 5, 0, 0, 0, 0f);
             }
             player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_CREEPER_DEATH, SoundCategory.PLAYERS, 1, 3f);
-            player.fallDistance = 0;
             NetworkHandler.NETWORK.sendTo(
                     new SPacketPlayerMotion((float)player.getLookVec().x, 0.2f, (float)player.getLookVec().z), (EntityPlayerMP) player);
         }
+        player.fallDistance = 0;
 
         super.execute(player);
     }

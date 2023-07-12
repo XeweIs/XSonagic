@@ -1,6 +1,5 @@
 package ru.xewe.xonagic.server.commands;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -13,7 +12,6 @@ import ru.xewe.xonagic.common.enums.ElementEnum;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandEditAbilities extends CommandBase {
@@ -27,7 +25,10 @@ public class CommandEditAbilities extends CommandBase {
     @Nonnull
     @Override
     public String getUsage(@Nonnull ICommandSender sender) {
-        return I18n.format("command.editAbilities.usage");
+        return "command.editAbilities.usage";
+    }
+    public int getRequiredPermissionLevel() {
+        return 2;
     }
 
     @Override
@@ -40,39 +41,34 @@ public class CommandEditAbilities extends CommandBase {
         String option = args[1];
         String ability = "";
 
-//        if (args.length == 3) {
-//            try {
-//                ability = AbilitiesEnum.valueOfCaseLess(args[2]).getName();
-//            } catch (IllegalArgumentException exception) {
-//                throw new SyntaxErrorException(I18n.format("command.editAbilities.unknownAbility", args[2]));
-//            }
-//        } else if (option.equals("add") || option.equals("remove")) {
-//            throw new WrongUsageException(getUsage(sender));
-//        }
-
         if (option.equals("add") || option.equals("remove")){
             if (args.length != 3) throw new WrongUsageException(getUsage(sender));
 
             try {
-                ability = AbilitiesEnum.valueOfCaseLess(args[2]).getName();
+                ability = AbilitiesEnum.valueOfCaseLess(args[2]).getInfo().name();
+
+                if(!AbilitiesEnum.valueOfCaseLess(args[2]).getInfo().element().equals(ElementData.getElement(player)))
+                    throw new SyntaxErrorException("command.editAbilities.mismatchAbility", player.getName(), args[2]);
+
             } catch (IllegalArgumentException exception) {
-                throw new SyntaxErrorException(I18n.format("command.editAbilities.unknownAbility", args[2]));
+                throw new SyntaxErrorException("command.editAbilities.unknownAbility", args[2]);
             }
         }
 
         switch (option) {
             case "add":
                 if (!AbilitiesData.add(player, ability)) {
-                    throw new SyntaxErrorException(I18n.format("command.editAbilities.fail.add", player.getName(), ability));
+                    throw new SyntaxErrorException("command.editAbilities.fail.add", player.getName(), ability);
                 }
                 break;
             case "remove":
                 if (!AbilitiesData.remove(player, ability)) {
-                    throw new SyntaxErrorException(I18n.format("command.editAbilities.fail.remove", player.getName(), ability));
+                    throw new SyntaxErrorException("command.editAbilities.fail.remove", player.getName(), ability);
                 }
                 break;
             case "reset":
-                AbilitiesData.refill(player);
+                AbilitiesData.reset(player);
+                break;
             default:
                 throw new WrongUsageException(getUsage(sender));
         }
@@ -102,7 +98,7 @@ public class CommandEditAbilities extends CommandBase {
                 }
 
                 EntityPlayerMP player;
-                String[] abilities = new String[0];
+                List<String> abilities = new ArrayList<>();
                 try {
                     player = getPlayer(server, sender, arguments[0]);
                 } catch (CommandException e) {
@@ -112,9 +108,9 @@ public class CommandEditAbilities extends CommandBase {
                 switch (arguments[1]) {
                     case "add":
                         ElementEnum element = ElementData.getElement(player);
-                        List<String> arrayAbilities = new ArrayList<>(Arrays.asList(AbilitiesEnum.getAllWithElement(element)));
-                        arrayAbilities.removeAll(Arrays.asList(AbilitiesData.get(player)));
-                        abilities = arrayAbilities.toArray(new String[0]);
+                        List<String> arrayAbilities = AbilitiesEnum.getAllWithElementToString(element);
+                        arrayAbilities.removeAll(AbilitiesData.get(player));
+                        abilities = arrayAbilities;
                         break;
                     case "remove":
                         abilities = AbilitiesData.get(player);

@@ -1,12 +1,17 @@
 package ru.xewe.xonagic.common.data;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import ru.xewe.xonagic.XeweXonagic;
-import ru.xewe.xonagic.common.ability.Ability;
+import ru.xewe.xonagic.common.ability.AbilityManager;
+import ru.xewe.xonagic.common.ability.AbilityManagerEvents;
+import ru.xewe.xonagic.common.enums.AbilitiesEnum;
+import ru.xewe.xonagic.common.packets.SPacketSynchAbilityManager;
+import ru.xewe.xonagic.common.registry.NetworkHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,13 +23,14 @@ public class AbilitiesData {
     static String key = XeweXonagic.MODID + ":abilities";
 
     //Получаем хранящуюся строку со способностями без обработки split'ом
-    static String getRaw(EntityPlayer player) {
+    public static String getRaw(EntityPlayer player) {
         return player.getDataManager().get(dataParameter);
     }
 
     //Получаем список названий способностей участника
-    public static String[] get(EntityPlayer player) {
-        return getRaw(player).split("\\|");
+    public static List<String> get(EntityPlayer player) {
+        if(getRaw(player).isEmpty()) return new ArrayList<>(); //Пиздец, ну и костыль с этим ебучим new Array - если убрать, то get будет возвращать даже пустую строку с 1 элементом.
+        return Arrays.asList(getRaw(player).split("\\|"));
     }
 
     //Задаем текущее значение способностей без обработки
@@ -39,10 +45,10 @@ public class AbilitiesData {
 //    }
 
     //Задаем текущее значение способностей с обработкой, то есть входными данными списка со способностями
-    public static void set(EntityPlayer player, Ability... abilities) {
-        String[] abilitiesName = Arrays.stream(abilities).map(ability -> ability.getClass().getSimpleName()).toArray(String[]::new);
-        setRaw(player, String.join("|", abilitiesName));
-    }
+//    public static void set(EntityPlayer player, Ability... abilities) {
+//        List<String> abilitiesName = Arrays.stream(abilities).map(ability -> ability.getClass().getSimpleName()).collect(Collectors.toList());
+//        setRaw(player, String.join("|", abilitiesName));
+//    }
 
     //Добавление способностей
 //    public static void add(EntityPlayer player, Ability... abilities) {
@@ -52,15 +58,26 @@ public class AbilitiesData {
 //    }
 
     public static boolean add(EntityPlayer player, String... abilitiesName){
-        for(String abilityName : abilitiesName){
-            if(Arrays.asList(get(player)).contains(abilityName)) return false;
-        }
+        boolean success = true;
 
         List<String> abilitiesNameList = new ArrayList<>(Arrays.asList(abilitiesName));
-        abilitiesNameList.addAll(Arrays.asList(get(player)));
+
+        for(int a = 0; a < abilitiesNameList.size(); a++){
+            String abilityName = abilitiesNameList.get(a);
+
+            if(get(player).contains(abilityName)){
+                abilitiesNameList.remove(abilityName);
+                success = false;
+            }else if(!player.world.isRemote){ //Синхронизация способностей с AbilityManager
+                AbilityManager.getAbilityManagerMP(player.getUniqueID()).abilities.add(AbilitiesEnum.valueOfCaseLess(abilityName).getInstance());
+                NetworkHandler.NETWORK.sendTo(new SPacketSynchAbilityManager(SPacketSynchAbilityManager.Option.add, abilityName), (EntityPlayerMP) player);
+            }
+        }
+
+        abilitiesNameList.addAll(get(player));
         setRaw(player, String.join("|", abilitiesNameList));
 
-        return true;
+        return success;
     }
 
     //Удаление способностей
@@ -73,10 +90,17 @@ public class AbilitiesData {
 
     public static boolean remove(EntityPlayer player, String... abilitiesName){
         for(String abilityName : abilitiesName){
-            if(!Arrays.asList(get(player)).contains(abilityName)) return false;
+            if(!get(player).contains(abilityName)) return false;
+
+            //Синхронизация способностей с AbilityManager
+            if(!player.world.isRemote){
+                AbilityManager.getAbilityManagerMP(player.getUniqueID()).abilities
+                        .removeIf(ability -> ability.getInfo().name().equals(abilityName));
+                NetworkHandler.NETWORK.sendTo(new SPacketSynchAbilityManager(SPacketSynchAbilityManager.Option.remove, abilityName), (EntityPlayerMP) player);
+            }
         }
 
-        List<String> abilities = new ArrayList<>(Arrays.asList(get(player)));
+        List<String> abilities = new ArrayList<>(get(player));
         List<String> toRemoveAbilitiesName = new ArrayList<>(Arrays.asList(abilitiesName));
         abilities.removeAll(toRemoveAbilitiesName);
         setRaw(player, String.join("|", abilities));
@@ -84,7 +108,13 @@ public class AbilitiesData {
     }
 
     //Сброс значений
-    public static void refill(EntityPlayer player) {
+    public static void reset(EntityPlayer player) {
+        //Синхронизация способностей с AbilityManager
+        if(!player.world.isRemote) {
+            AbilityManager.getAbilityManagerMP(player.getUniqueID()).abilities.clear();
+            NetworkHandler.NETWORK.sendTo(new SPacketSynchAbilityManager(SPacketSynchAbilityManager.Option.reset, ""), (EntityPlayerMP) player);
+        }
+
         setRaw(player, "");
     }
 
@@ -103,7 +133,11 @@ public class AbilitiesData {
     //Установка значений игрока при заходе в мир
     @SubscribeEvent
     static void onPlayerLogIn(PlayerEvent.PlayerLoggedInEvent event) {
-        setRaw(event.player, loadDataFromNBT(event.player));
+        String data = loadDataFromNBT(event.player);
+        setRaw(event.player, data);
+
+        //Установка значений уже для AbilityManager
+        AbilityManagerEvents.onPlayerLogIn(event);
     }
 
     //Сохранение значений игрока при выходе из мира

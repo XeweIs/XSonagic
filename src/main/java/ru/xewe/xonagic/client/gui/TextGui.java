@@ -28,9 +28,9 @@ public class TextGui extends Gui {
                 .replace(four, String.format("%s%s"+four, TextFormatting.LIGHT_PURPLE, TextFormatting.BOLD));
 
         List<String> list = AbilityManager.getAbilityManagerSP().coolDownAbilities.stream().map(ability -> new StringBuilder()
-                .append(ability.color)
+                .append(ability.getInfo().color())
                 .append(TextFormatting.STRIKETHROUGH)
-                .append(ability.displayName)
+                .append(ability.getInfo().displayName())
                 .append(" ")
                 .append(ability.coolDown / 20 + 1)
                 .append(TextFormatting.RESET).toString()).collect(Collectors.toList());

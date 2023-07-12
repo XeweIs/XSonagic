@@ -53,12 +53,10 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
-}
 
-dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
-
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version

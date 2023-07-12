@@ -5,7 +5,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public enum ElementEnum {
-    Air("Air"), Earth("Earth"), Water("Water"), Fire("Fire");
+    None("None"), Air("Air"), Earth("Earth"), Water("Water"), Fire("Fire");
     final String element;
     ElementEnum(String element){
         this.element = element;
@@ -43,5 +43,13 @@ public enum ElementEnum {
         return new TextComponentTranslation("element." + this.toString().toLowerCase());
     }
 
+    public static ElementEnum valueOfCaseLess(String name) {
+        for (ElementEnum enumValue : ElementEnum.values()) {
+            if (enumValue.name().equalsIgnoreCase(name)) {
+                return enumValue;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant with name: " + name);
+    }
 
 }

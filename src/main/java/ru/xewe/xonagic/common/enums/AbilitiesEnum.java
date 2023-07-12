@@ -1,7 +1,10 @@
 package ru.xewe.xonagic.common.enums;
 
+import net.minecraft.entity.player.EntityPlayer;
 import ru.xewe.xonagic.common.ability.Ability;
 import ru.xewe.xonagic.common.ability.AbilityInfo;
+import ru.xewe.xonagic.common.data.AbilitiesData;
+import ru.xewe.xonagic.common.data.ElementData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,30 +20,45 @@ public enum AbilitiesEnum {
         this.abilityClass = abilityClass;
     }
 
-    public String getName() {
-        return abilityClass.getAnnotation(AbilityInfo.class).name();
+    public AbilityInfo getInfo(){
+        return abilityClass.getAnnotation(AbilityInfo.class);
     }
 
     public Ability getInstance(){
+        Ability ability;
         try {
-            return abilityClass.newInstance();
+            ability = abilityClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+
+        return ability;
     }
 
-    public static String[] getAllWithElement(ElementEnum element){
+    public static List<String> getAllWithElementToString(ElementEnum element){
         List<String> abilities = new ArrayList<>();
         for(AbilitiesEnum ability : AbilitiesEnum.values()){
             if(ability.abilityClass.getAnnotation(AbilityInfo.class).element() == element){
-                abilities.add(ability.getName());
+                abilities.add(ability.getInfo().name());
             }
         }
-        return abilities.toArray(new String[0]);
+        return abilities;
+    }
+
+    public static List<Ability> getAllWithPlayer(EntityPlayer player){
+        List<Ability> abilities = new ArrayList<>();
+        ElementEnum element = ElementData.getElement(player);
+        for(AbilitiesEnum ability : AbilitiesEnum.values()){
+            if(ability.abilityClass.getAnnotation(AbilityInfo.class).element() == element
+            && AbilitiesData.get(player).contains(ability.getInfo().name())){
+                abilities.add(ability.getInstance());
+            }
+        }
+        return abilities;
     }
 
     public static AbilitiesEnum valueOfCaseLess(String name) {
-        for (AbilitiesEnum enumValue : values()) {
+        for (AbilitiesEnum enumValue : AbilitiesEnum.values()) {
             if (enumValue.name().equalsIgnoreCase(name)) {
                 return enumValue;
             }

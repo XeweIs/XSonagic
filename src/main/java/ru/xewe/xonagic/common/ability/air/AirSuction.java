@@ -103,8 +103,9 @@ public class AirSuction extends Ability {
 
     @Override
     protected void onExit() {
-        AbilityInfo info = this.getClass().getAnnotation(AbilityInfo.class);
-        this.coolDown = (int)startPlayerPosition.distanceTo(startPlayerRayTrace.hitVec) + info.coolDown();
+        if(!player.isCreative()) {
+            this.coolDown = (int) startPlayerPosition.distanceTo(startPlayerRayTrace.hitVec);
+        }
         super.onExit();
     }
 }

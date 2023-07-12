@@ -1,12 +1,11 @@
 package ru.xewe.xonagic.server.commands;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import org.codehaus.plexus.util.StringUtils;
+import ru.xewe.xonagic.common.data.AbilitiesData;
 import ru.xewe.xonagic.common.data.ElementData;
 import ru.xewe.xonagic.common.enums.ElementEnum;
 
@@ -25,7 +24,7 @@ public class CommandElementChoose extends CommandBase {
     @Nonnull
     @Override
     public String getUsage(@Nonnull ICommandSender sender) {
-        return I18n.format("command.elementChoose.usage");
+        return "command.elementChoose.usage";
     }
 
     public int getRequiredPermissionLevel() {
@@ -41,10 +40,9 @@ public class CommandElementChoose extends CommandBase {
         final EntityPlayerMP player = args.length == 2 ? getPlayer(server, sender, args[1]) : getCommandSenderAsPlayer(sender);
         ElementEnum element;
         try {
-            // Чтобы аргумент элемента не был чувствительным к регистру.
-            element = ElementEnum.valueOf(StringUtils.capitalise(args[0].toLowerCase()));
+            element = ElementEnum.valueOfCaseLess(args[0]);
         } catch (IllegalArgumentException exception) {
-            throw new SyntaxErrorException(I18n.format("command.elementChoose.unknownElement", args[0]));
+            throw new SyntaxErrorException("command.elementChoose.unknownElement", args[0]);
         }
 
         if (sender.getEntityWorld().getGameRules().getBoolean("sendCommandFeedback")) {
@@ -53,7 +51,10 @@ public class CommandElementChoose extends CommandBase {
 
         notifyCommandListener(sender, this, 1, "command.elementChoose.success", player.getName(), element.getProcessed());
 
-        ElementData.setElement(player, element);
+        if(!element.equals(ElementData.getElement(player))){
+            ElementData.setElement(player, element);
+            AbilitiesData.reset(player);
+        }
     }
 
     @Nonnull

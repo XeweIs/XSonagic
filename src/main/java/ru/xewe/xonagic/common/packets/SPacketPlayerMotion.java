@@ -1,7 +1,7 @@
 package ru.xewe.xonagic.common.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.Vec3d;
 
@@ -25,14 +25,14 @@ public class SPacketPlayerMotion extends AbstractPacket<SPacketPlayerMotion>{
     }
 
     @Override
-    public void handleClient(SPacketPlayerMotion message, EntityPlayerSP player) {
-        player.motionX = message.x;
-        player.motionY = message.y;
-        player.motionZ = message.z;
+    public void handleClient(SPacketPlayerMotion msg, EntityPlayer player) {
+        player.motionX = msg.x;
+        player.motionY = msg.y;
+        player.motionZ = msg.z;
     }
 
     @Override
-    public void handleServer(SPacketPlayerMotion message, EntityPlayerMP player) {
+    public void handleServer(SPacketPlayerMotion msg, EntityPlayerMP player) {
     }
 
     @Override

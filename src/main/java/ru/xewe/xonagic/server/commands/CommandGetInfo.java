@@ -1,7 +1,9 @@
 package ru.xewe.xonagic.server.commands;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +25,7 @@ public class CommandGetInfo extends CommandBase {
     @Nonnull
     @Override
     public String getUsage(@Nonnull ICommandSender sender) {
-        return I18n.format("command.getInfo.usage");
+        return "command.getInfo.usage";
     }
 
     public int getRequiredPermissionLevel() {

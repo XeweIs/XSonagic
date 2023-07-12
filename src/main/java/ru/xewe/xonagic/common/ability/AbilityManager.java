@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import ru.xewe.xonagic.XeweXonagic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ import java.util.UUID;
 public class AbilityManager {
     public List<Ability> coolDownAbilities = new ArrayList<>();
     public List<Ability> activateAbilities = new ArrayList<>();
-//    public List<Ability> abilities = new ArrayList<>();
+    public List<Ability> abilities = new ArrayList<>();
     public static AbilityManager abilityManagerSP = new AbilityManager();
     public static HashMap<UUID, AbilityManager> abilityManagerMP = new HashMap<>();
 
@@ -23,7 +22,6 @@ public class AbilityManager {
         if (Minecraft.getMinecraft().isGamePaused()) return;
         EntityPlayer player = Minecraft.getMinecraft().player;
         //CoolDown for Client
-
         for (int i = 0; i < coolDownAbilities.size(); i++) {
             Ability ability = coolDownAbilities.get(i);
 
@@ -86,8 +84,7 @@ public class AbilityManager {
     }
 
     public void imposeCoolDown(Ability ability) {
-        AbilityInfo info = ability.getClass().getAnnotation(AbilityInfo.class);
-        ability.coolDown = (ability.coolDown != 0 ? ability.coolDown : info.coolDown()) * 20;
+        ability.coolDown *= 20;  //20 тиков - секунда
         coolDownAbilities.add(ability);
     }
 
@@ -102,8 +99,6 @@ public class AbilityManager {
         }else{
             return getAbilityManagerMP(player.getUniqueID());
         }
-
-
     }
 
     @SideOnly(Side.CLIENT)
@@ -113,39 +108,5 @@ public class AbilityManager {
 
     public static AbilityManager getAbilityManagerMP(UUID uuidPlayer){
         return abilityManagerMP.get(uuidPlayer);
-    }
-
-    public static Ability getAbility(String name) {
-        String element;
-        Ability ability;
-        Class<? extends Ability> clazz;
-
-        if(name.contains("Air")){
-            element = "air";
-        }else if (name.contains("Fire")){
-            element = "fire";
-        }else if (name.contains("Earth")){
-            element = "earth";
-        }else if (name.contains("Water")){
-            element = "water";
-        }else{
-            XeweXonagic.logger.error("Ability element not found : "+name);
-            return null;
-        }
-
-        String path = "ru.xewe.xonagic.common.ability."+element+"."+name;
-        try {
-            clazz = (Class<? extends Ability>) Class.forName(path);
-        } catch (ClassNotFoundException ex) {
-            XeweXonagic.logger.error("Ability class not found : "+path);
-            throw new RuntimeException(ex);
-        }
-
-        try {
-            ability = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
-        return ability;
     }
 }
